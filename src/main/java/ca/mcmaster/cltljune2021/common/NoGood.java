@@ -5,8 +5,8 @@
  */
 package ca.mcmaster.cltljune2021.common;
 
-import static ca.mcmaster.cltljune2021.Constants.*;
-import static ca.mcmaster.cltljune2021.drivers.TestDriver.objectiveFunctionMap;
+import static ca.mcmaster.cltljune2021.Constants.*; 
+import static ca.mcmaster.cltljune2021.drivers.BaseDriver.objectiveFunctionMap;
 import static java.util.Collections.unmodifiableSet;
 import java.util.HashSet;
 import java.util.Map;
@@ -113,9 +113,9 @@ public class NoGood {
         return varsInThisCube_that_Are_included_in_objective.size() == ZERO ? -BILLION: this.priority;
     }
     
-    //does this noggod render th ebest unconstrainted vertex infeasible?
+    //does this noggod render the best unconstrainted vertex infeasible?
     //i.e., every fixing in this nogood must lower the obj function value
-    public boolean isBestUnconstraintedVertex_Mismatched () {
+    public boolean isBestUnconstraintedVertex_Passed () {
         boolean result = false ;
         //all the zero fixings must have positive  obj coeffs 
         //all the 1 fixings must have negative  obj coeffs 
@@ -140,21 +140,37 @@ public class NoGood {
     
     //for small nogoods, keep adding next highest obj coeff variable until size equals largest size nogood
     //Tree map has aboslute value of obj func coeffs of free variables, and the count of variables with that obj value
-    public double getAdjustedPriority (int largestSize , TreeMap<Double, Integer > freeVariableCoeffs) {
+    public double getAdjustedPriority (int largestSize ) {
+        
+        TreeMap<Double, Integer > freeVariableCoeffs = new TreeMap<Double, Integer >   ();
+        //prepare FreeVariableCoeffs 
+        for (Map.Entry<String, Double> entry : objectiveFunctionMap.entrySet()){
+            String thisVar = entry.getKey();
+            if (this.zeroFixedVars.contains(thisVar) || this.oneFixedVars.contains(thisVar) ){
+                //
+            }else {
+                double absoluteValue = Math.abs (entry.getValue());
+                Integer current = freeVariableCoeffs.get (absoluteValue) ;
+                if (null == current) current = ZERO;
+                freeVariableCoeffs.put (absoluteValue , ONE + current);
+            }
+        }
+        
         int mySize = getSize();
-        int numOfAdjustments = largestSize- mySize;
+        int numOfAdjustmentsNeeded = largestSize- mySize;
         double adjustment = ZERO;
         
          
         for (Map.Entry<Double, Integer >  entry : freeVariableCoeffs.descendingMap().entrySet()){
-            if (numOfAdjustments> entry.getValue()){
-                numOfAdjustments -= entry.getValue();
+            if (numOfAdjustmentsNeeded> entry.getValue()){
+                numOfAdjustmentsNeeded -= entry.getValue();
                 adjustment += entry.getValue() * entry.getKey();
             }else {
-                numOfAdjustments= ZERO;
-                adjustment += entry.getValue() *numOfAdjustments  ;
+                adjustment += entry.getKey() *numOfAdjustmentsNeeded  ;
+                numOfAdjustmentsNeeded= ZERO;
+                
             }
-            if (ZERO == numOfAdjustments) break;
+            if (ZERO == numOfAdjustmentsNeeded) break;
         }
          
         
@@ -166,7 +182,7 @@ public class NoGood {
     } 
     
     //can implement toString() 
-    public void printMe () {
+    public void printMe (Integer largestKnownNoGoodSize) {
         System.out.println("Zero fixed vars") ;
         for (String str : zeroFixedVars){
             System.out.println(str) ;
@@ -175,6 +191,13 @@ public class NoGood {
         for (String str : oneFixedVars){
             System.out.println(str) ;
         }
-        System.out.println();
+        
+        if (null!=largestKnownNoGoodSize) {
+            System.out.println("Priority = "+ this.priority + "Passes best vertex = "+this.isBestUnconstraintedVertex_Passed()
+        + " Ajusted priority "+ this.getAdjustedPriority(largestKnownNoGoodSize ));
+        } else {
+            System.out.println("Priority = "+ this.priority + "Passes best vertex = "+this.isBestUnconstraintedVertex_Passed()      );
+        }
+        
     } 
 }

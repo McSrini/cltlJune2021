@@ -8,7 +8,7 @@ package ca.mcmaster.cltljune2021.mohp;
 import static ca.mcmaster.cltljune2021.Constants.*;
 import ca.mcmaster.cltljune2021.Parameters;
 import ca.mcmaster.cltljune2021.common.NoGood;
-import ca.mcmaster.cltljune2021.drivers.TestDriver;
+import ca.mcmaster.cltljune2021.drivers.TestDriver1;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ public class MOHP_Heuristic {
          
         Map <String, Integer> frequencyMap = new HashMap <String, Integer>();
         List<String> highFreqVars = new ArrayList<String> ();
-        highFreqVars.addAll (TestDriver.mapOfAllVariablesInTheModel.keySet());
+        highFreqVars.addAll (TestDriver1.mapOfAllVariablesInTheModel.keySet());
         
         for (Map.Entry<Double, Set<NoGood>> entry : noGoodMap.descendingMap().entrySet()){
             for ( NoGood nogud : entry.getValue()){

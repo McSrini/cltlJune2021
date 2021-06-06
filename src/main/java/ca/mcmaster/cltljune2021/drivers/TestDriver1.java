@@ -22,14 +22,8 @@ import org.apache.log4j.Logger;
  *
  * @author tamvadss
  */
-public class TestDriver {
-    
-    protected static Logger logger;
-    
-    public static TreeMap<String, Double> objectiveFunctionMap =null;
-    public static  TreeMap<String, IloNumVar> mapOfAllVariablesInTheModel = new TreeMap<String, IloNumVar> ();
-    
-    
+public class TestDriver1 extends BaseDriver{
+   
    
     public static void main(String[] args) throws Exception{
          

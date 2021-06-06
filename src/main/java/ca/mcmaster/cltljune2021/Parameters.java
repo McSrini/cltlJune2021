@@ -14,7 +14,13 @@ import java.util.List;
  * @author tamvadss
  */
 public class Parameters {
-    public static final String PRESOLVED_MIP_FILENAME = "PBO.pre.sav";
+    
+    public static final String PRESOLVED_MIP_FILENAME =  
+            
+            System.getProperty("os.name").toLowerCase().contains("win") ?
+            
+            "F:\\temporary files here recovered\\knapsackTiny.lp":
+            "PBO.pre.sav";
     
     public static final int MAX_INFEASIBLE_HYPERCUBE_SEARCH_BRANCH_LIMIT = 1000; 
       

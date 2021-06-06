@@ -23,21 +23,43 @@ public class Collector {
     
    
     
-    public Set<NoGood> collect (SearchTree tree){
+    public Set<NoGood> collect (LowerBoundConstraint lbc){
+        
+        SearchTree tree = new SearchTree( new SearchTreeNode (lbc));
         
         Set<NoGood>  noGoods = new HashSet<NoGood> ();
         
         //insert root node into  map of leaf nodes
         while (numBranchesAlreadyMade<=MAX_INFEASIBLE_HYPERCUBE_SEARCH_BRANCH_LIMIT && !tree.isEmpty()){
+            
+            //System.out.println("NUm leafs in serach tree = "+ tree.size()) ;
+            
             SearchTreeNode leaf = tree.removeLeaf();
-            List<SearchTreeNode>  kids = leaf.branch( leaf.lbc.getVariableToBranch());
+            String varToBranchOn = leaf.lbc.getVariableToBranch();
+            List<SearchTreeNode>  kids = leaf.branch( varToBranchOn);
+            numBranchesAlreadyMade ++;
+            
+            //System.out.println("Branched on  "+varToBranchOn ) ;
             
             for (SearchTreeNode kid :  kids  ){
+                
+                //System.out.println("kid changeInValue_dueToBranches = " + kid.changeInValue_dueToBranches) ;
+                
                 if (kid.lbc.isGuaranteed_InFeasible()){
                     //collect it
-                    noGoods.add (convertToNogood(kid)) ;
+                    NoGood ng = convertToNogood(kid);
+                    noGoods.add (ng) ;
+                    
+                    //System.out.println("Collected no good ") ;
+                    //ng.printMe( null);
+                    
+                    
                 }else if (kid.lbc.isGuaranteed_Feasible()){
                     //discard kid
+                    
+                    //System.out.println("Feasible node ") ;
+                    //kid.lbc.printMe();
+                    
                 }else {
                     //insert back into leaf index
                     tree.addLeaf(kid);
@@ -46,6 +68,8 @@ public class Collector {
             
         }
         
+        
+        System.out.println("NOgood collection stopped after "+ numBranchesAlreadyMade + " branches.") ;
         return noGoods;
         
     }

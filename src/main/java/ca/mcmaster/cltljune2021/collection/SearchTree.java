@@ -58,5 +58,11 @@ class SearchTree {
     public boolean isEmpty  () {
         return (leafMap.size() == ZERO);
     }
-    
+    public int size (){
+        int size = ZERO;
+        for (TreeMap<Integer, List<SearchTreeNode>>  innermap : leafMap.values()){
+            size += innermap.values().size();
+        }
+        return size;
+    }
 }

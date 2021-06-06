@@ -21,6 +21,14 @@ public class LowerBoundConstraint {
     
     public double lowerBound ;
     
+    
+    public void printMe (){
+        for (Tuple tuple: tuples){
+            System.out.print("("+tuple.varName + "," + tuple.coefficient+ ")") ;
+        }
+        System.out.println(" >= "+ lowerBound) ;
+    }
+    
     public void add (List<Tuple> newTuples) {
         tuples.addAll(newTuples) ;
         Collections.sort(tuples);

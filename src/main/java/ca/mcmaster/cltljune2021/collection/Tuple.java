@@ -15,6 +15,15 @@ public class Tuple implements Comparable<Tuple>  {
         
     public String varName ;
     public double coefficient;
+    
+    public Tuple ( ){
+         
+    }
+    
+    public Tuple (String varName ,double coefficient){
+        this.coefficient = coefficient;
+        this.varName = varName;
+    }
  
     public int compareTo(Tuple anotherTuple) {
         return  (this.coefficient) > (anotherTuple.coefficient)?   ONE : -ONE;

@@ -6,6 +6,7 @@
 package ca.mcmaster.cltljune2021.collection;
 
 import static ca.mcmaster.cltljune2021.Constants.*;
+import static ca.mcmaster.cltljune2021.drivers.BaseDriver.objectiveFunctionMap;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,37 +17,44 @@ import java.util.List;
 class SearchTreeNode {
     
     public LowerBoundConstraint lbc;
-    public SearchTreeNode parent;
+    public SearchTreeNode parent=null;
     public String branchingVar; 
     public Boolean amITheDownChild = null;
     
     public int depth =ZERO;
     public Double changeInValue_dueToBranches = DOUBLE_ZERO;
     
+    public SearchTreeNode (LowerBoundConstraint lbc){
+        this.lbc = lbc;
+    }
+    
     public List<SearchTreeNode>  branch (String var) {
         List<SearchTreeNode>  result = new ArrayList<SearchTreeNode>  ();
         
-        SearchTreeNode downchild = new SearchTreeNode ();
-        SearchTreeNode upchild = new SearchTreeNode ();
+        LowerBoundConstraint down_lbc= this.lbc.createCopy();
+        down_lbc.remove(var, ZERO);
+        SearchTreeNode downchild = new SearchTreeNode (down_lbc);
+        
+        LowerBoundConstraint  up_lbc = this.lbc.createCopy();
+        up_lbc .remove(var, ONE);
+        SearchTreeNode upchild = new SearchTreeNode (up_lbc);
+        
         result.add (upchild );
         result.add (downchild );
         
-        downchild.parent = this;
-        downchild.branchingVar = var;
+        this.branchingVar= var;
+        
+        downchild.parent = this;       
         downchild.amITheDownChild = true;
         downchild.depth= this.depth + ONE;
-        LowerBoundConstraint down_lbc= this.lbc.createCopy();
-        down_lbc.remove(var, ZERO);
-        downchild.lbc =down_lbc;
+        downchild.changeInValue_dueToBranches =  this.changeInValue_dueToBranches ;
         
-        upchild.lbc = this.lbc.createCopy();
-        upchild.lbc .remove(var, ONE);
-        upchild.parent = this;
-        upchild.branchingVar= var;
+       
+        upchild.parent = this;       
         upchild.amITheDownChild = false;
         upchild.depth = this.depth + ONE;
-        upchild.changeInValue_dueToBranches +=  this.changeInValue_dueToBranches + this.lbc.lowerBound - upchild.lbc.lowerBound;
-        
+        upchild.changeInValue_dueToBranches =  this.changeInValue_dueToBranches + objectiveFunctionMap.get (var);
+         
         return result;
     }
     
