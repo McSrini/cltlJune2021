@@ -140,13 +140,13 @@ public class NoGood {
     
     //for small nogoods, keep adding next highest obj coeff variable until size equals largest size nogood
     //Tree map has aboslute value of obj func coeffs of free variables, and the count of variables with that obj value
-    public double getAdjustedPriority (int largestSize ) {
+    public double getAdjustedPriority (int largestSize, Set<String> fixedVars ) {
         
         TreeMap<Double, Integer > freeVariableCoeffs = new TreeMap<Double, Integer >   ();
         //prepare FreeVariableCoeffs 
         for (Map.Entry<String, Double> entry : objectiveFunctionMap.entrySet()){
             String thisVar = entry.getKey();
-            if (this.zeroFixedVars.contains(thisVar) || this.oneFixedVars.contains(thisVar) ){
+            if (this.zeroFixedVars.contains(thisVar) || this.oneFixedVars.contains(thisVar)|| fixedVars.contains(thisVar) ){
                 //
             }else {
                 double absoluteValue = Math.abs (entry.getValue());
@@ -182,7 +182,7 @@ public class NoGood {
     } 
     
     //can implement toString() 
-    public void printMe (Integer largestKnownNoGoodSize) {
+    public void printMe () {
         System.out.println("Zero fixed vars") ;
         for (String str : zeroFixedVars){
             System.out.println(str) ;
@@ -192,12 +192,9 @@ public class NoGood {
             System.out.println(str) ;
         }
         
-        if (null!=largestKnownNoGoodSize) {
-            System.out.println("Priority = "+ this.priority + "Passes best vertex = "+this.isBestUnconstraintedVertex_Passed()
-        + " Ajusted priority "+ this.getAdjustedPriority(largestKnownNoGoodSize ));
-        } else {
-            System.out.println("Priority = "+ this.priority + "Passes best vertex = "+this.isBestUnconstraintedVertex_Passed()      );
-        }
+        System.out.println("Priority = "+ this.priority + "Passes best vertex = "+this.isBestUnconstraintedVertex_Passed()      );
+        
+        
         
     } 
 }
