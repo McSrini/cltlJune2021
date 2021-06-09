@@ -39,7 +39,7 @@ public class LowerBoundConstraint {
     public void remove (String var, int fixing) {
           
         Tuple first =  tuples.get(ZERO);
-         
+                  
         tuples.remove(first);
         this.lowerBound -= first.coefficient*fixing;
     }

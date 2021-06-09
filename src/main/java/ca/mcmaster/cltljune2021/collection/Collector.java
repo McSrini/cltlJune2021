@@ -69,7 +69,9 @@ public class Collector {
         }
         
         
-        System.out.println("NOgood collection stopped after "+ numBranchesAlreadyMade + " branches.") ;
+        //System.out.println("NOgood collection stopped after "+ numBranchesAlreadyMade + " branches.") ;
+        
+        
         return noGoods;
         
     }

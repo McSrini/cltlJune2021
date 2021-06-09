@@ -11,6 +11,7 @@ import ca.mcmaster.cltljune2021.collection.*;
 import ca.mcmaster.cltljune2021.common.NoGood;
 import ca.mcmaster.cltljune2021.utilities.CplexUtilities;
 import ca.mcmaster.cltljune2021.utilities.NoGoodFilter;
+import ilog.concert.IloException;
 import ilog.concert.IloNumVar;
 import ilog.cplex.IloCplex;
 import static java.lang.System.exit;
@@ -27,9 +28,11 @@ import org.apache.log4j.RollingFileAppender;
  *
  * @author tamvadss
  */
-public class TestDriver2  extends BaseDriver{
+class TestDriver2  extends BaseDriver{
 
+    public TestDriver2 () throws IloException{
     
+    }
     static {
         logger=Logger.getLogger(TestDriver2.class);
         logger.setLevel(LOGGING_LEVEL);

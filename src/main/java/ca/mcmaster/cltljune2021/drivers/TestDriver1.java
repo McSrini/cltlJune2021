@@ -22,8 +22,11 @@ import org.apache.log4j.Logger;
  *
  * @author tamvadss
  */
-public class TestDriver1 extends BaseDriver{
+class TestDriver1 extends BaseDriver{
    
+    public TestDriver1 () throws IloException{
+        
+    }
    
     public static void main(String[] args) throws Exception{
          
@@ -89,7 +92,16 @@ public class TestDriver1 extends BaseDriver{
         noGoodMap.put (1.0, s1);
         noGoodMap.put (2.0, s2);
        
-        System.out.print(MOHP_Heuristic.getBranchingVariable(noGoodMap)) ;
+        Set<String>  fractionalVars = new HashSet<String> ();
+        //fractionalVars.add ("x1") ;
+        //fractionalVars.add ("x2") ;
+        //fractionalVars.add ("x3") ;
+        //fractionalVars.add ("x4") ;
+        fractionalVars.add ("x5") ;
+        fractionalVars.add ("x6") ;
+        //fractionalVars.add ("x7") ;
+        //fractionalVars.add ("x8") ;
+        System.out.print(MOHP_Heuristic.getBranchingVariable(noGoodMap, fractionalVars)) ;
         
     }
     

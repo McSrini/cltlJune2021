@@ -21,19 +21,20 @@ public class Parameters {
             
             "F:\\temporary files here recovered\\knapsackTiny.lp":
             "PBO.pre.sav";
-    
-    public static final int MAX_INFEASIBLE_HYPERCUBE_SEARCH_BRANCH_LIMIT = 1000; 
-      
+     
     public static final int RAMP_UP_DURATION_HOURS=   2  ; 
+    public static final int MAX_TEST_DURATION_HOURS= 24   ;
     
     public static List<String> mipsWithBarrier = new ArrayList<String> (
         Arrays.asList( "seymour-disj-10.pre", "supportcase3.pre", "supportcase10.pre"));
     public static boolean USE_BARRIER_FOR_SOLVING_LP = mipsWithBarrier.contains(PRESOLVED_MIP_FILENAME);
-         
+    
+    public static final int MAX_INFEASIBLE_HYPERCUBE_SEARCH_BRANCH_LIMIT = 100; 
+    
     public static final int MAX_THREADS =  System.getProperty("os.name").toLowerCase().contains("win") ? 2 : 32;
     public static final int  FILE_STRATEGY= 3;  
     
-    public static final long PERF_VARIABILITY_RANDOM_SEED = 18;
+    public static final long PERF_VARIABILITY_RANDOM_SEED = 1;
     public static final java.util.Random  PERF_VARIABILITY_RANDOM_GENERATOR =             
             new  java.util.Random  (PERF_VARIABILITY_RANDOM_SEED);   
         

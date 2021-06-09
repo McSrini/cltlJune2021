@@ -6,6 +6,7 @@
 package ca.mcmaster.cltljune2021.utilities;
 
 import static ca.mcmaster.cltljune2021.Constants.*;
+import static ca.mcmaster.cltljune2021.Parameters.*;
 import ca.mcmaster.cltljune2021.collection.*;
 import ilog.concert.IloException;
 import ilog.concert.IloLPMatrix;
@@ -23,6 +24,29 @@ import java.util.TreeMap;
  * @author tamvadss
  */
 public class CplexUtilities {
+    
+    public static void setCplexParameters (IloCplex cplex) throws IloException {
+        
+        cplex.setParam( IloCplex.Param.TimeLimit, SIXTY*  SIXTY);
+         
+        cplex.setParam( IloCplex.Param.Threads, MAX_THREADS);
+
+        cplex.setParam( IloCplex.Param.MIP.Strategy.File, FILE_STRATEGY);
+        
+        cplex.setParam( IloCplex.Param.Emphasis.MIP, TWO);
+                
+
+        if (USE_BARRIER_FOR_SOLVING_LP) {
+            cplex.setParam( IloCplex.Param.NodeAlgorithm  ,  IloCplex.Algorithm.Barrier);
+            cplex.setParam( IloCplex.Param.RootAlgorithm  ,  IloCplex.Algorithm.Barrier);
+        }
+
+        cplex.setParam( IloCplex.Param.MIP.Strategy.HeuristicFreq , -ONE);
+        
+        cplex.setParam(IloCplex.Param.MIP.Strategy.VariableSelect  , THREE );
+
+      
+    }
     
     
     public static List<LowerBoundConstraint> getConstraints (IloCplex cplex) throws IloException{

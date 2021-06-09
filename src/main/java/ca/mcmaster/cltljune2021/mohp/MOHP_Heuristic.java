@@ -8,7 +8,6 @@ package ca.mcmaster.cltljune2021.mohp;
 import static ca.mcmaster.cltljune2021.Constants.*;
 import ca.mcmaster.cltljune2021.Parameters;
 import ca.mcmaster.cltljune2021.common.NoGood;
-import ca.mcmaster.cltljune2021.drivers.TestDriver1;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,43 +25,63 @@ public class MOHP_Heuristic {
     
     //given a treemap of nogood sets ,  return branching variable
    
-    public static String getBranchingVariable (TreeMap<Double, Set<NoGood>> noGoodMap){
+    public static String getBranchingVariable (TreeMap<Double, Set<NoGood>> noGoodMap, Set<String> fractionalVariables){
          
+        String result = null;
+        int numOfFractionalVars = fractionalVariables.size();
+        
         Map <String, Integer> frequencyMap = new HashMap <String, Integer>();
-        List<String> highFreqVars = new ArrayList<String> ();
-        highFreqVars.addAll (TestDriver1.mapOfAllVariablesInTheModel.keySet());
+         
+        //every fractional variable is a candidate
+        for (String var :  fractionalVariables){
+            frequencyMap.put (var, ONE);
+        }
+                
         
         for (Map.Entry<Double, Set<NoGood>> entry : noGoodMap.descendingMap().entrySet()){
             for ( NoGood nogud : entry.getValue()){
+                
+                if (nogud.isBestUnconstraintedVertex_Passed()) continue;
+                
                 Set<String> varsInThisNoGood = new HashSet<String> ( );
                 varsInThisNoGood.addAll(nogud.getZeroFixedVars() );
                 varsInThisNoGood.addAll(nogud.getOneFixedVars() );
                 for (String var:varsInThisNoGood ){
-                    if (! highFreqVars.contains(var))continue;
+                     
                     Integer currentFreq = frequencyMap.get (var);
-                    if (null==currentFreq){
-                        frequencyMap.put (var, ONE);
-                    }else {
+                    if (null!=currentFreq){
+                         
                         frequencyMap.put (var,currentFreq + ONE); 
                     }
                 }
             }
             
-            //check if there is already a winner
-            highFreqVars = new ArrayList<String> ();
+            //reset high freq vars
+            List<String>    highFreqVars = new ArrayList<String> ();
             int highFreq = getVarsWithHighestFreq (   frequencyMap, highFreqVars);
-            if (highFreqVars.size()==ONE) break;
-            
+                                    
             //remove all vars from freqency map that are not inluded in highFreqVars
             frequencyMap.clear();
             for (String var :  highFreqVars){
-                frequencyMap.put (var, highFreq);
+                frequencyMap.put (var, ONE);
             }
             
+            
+            //check if there is already a winner
+            if (frequencyMap.size()==ONE) break;
+            
+            
         }
-                       
-        Collections.shuffle(highFreqVars,  Parameters.PERF_VARIABILITY_RANDOM_GENERATOR) ;
-        return highFreqVars.get(ZERO);
+        
+        if (numOfFractionalVars != frequencyMap.size()){
+            List<String> candidates = new ArrayList<String> () ;
+            candidates.addAll(frequencyMap.keySet());
+
+            Collections.shuffle(candidates,  Parameters.PERF_VARIABILITY_RANDOM_GENERATOR) ;
+            result =  candidates.get(ZERO);
+        }// else null result
+        
+        return result;
         
     }
     
